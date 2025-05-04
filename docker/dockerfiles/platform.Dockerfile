@@ -73,7 +73,6 @@ COPY docker/scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 4) Remover ou comentar a linha CMD abaixo e substituí-la por ENTRYPOINT
-# CMD [".venv/bin/gunicorn", "--bind", "0.0.0.0:3001", "--timeout", "300", "unstract.platform_service.run:app"]
 
 # Substituir por:
 ENTRYPOINT ["/entrypoint.sh"]
