@@ -59,5 +59,12 @@ RUN uv sync --frozen \
 
 EXPOSE 3001
 
+# Instalar cliente psql para rodar o script
+RUN apk add --no-cache postgresql-client
+
+# Copiar o script para dentro do container
+COPY docker/scripts/db-setup/db_setup.sh /usr/local/bin/db_setup.sh
+RUN chmod +x /usr/local/bin/db_setup.sh
+
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD [".venv/bin/gunicorn", "--bind", "0.0.0.0:3001", "--timeout", "300", "unstract.platform_service.run:app"]
