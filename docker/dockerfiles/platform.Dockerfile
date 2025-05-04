@@ -61,8 +61,7 @@ EXPOSE 3001
 
 # 1) Instalar o cliente psql para rodar o script de setup do DB
 RUN apt-get update && \
-    apt-get install -y postgresql-client && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y postgresql-client
 
 # 2) Copiar o script de criação do banco e schema
 COPY docker/scripts/db-setup/db_setup.sh /usr/local/bin/db_setup.sh
