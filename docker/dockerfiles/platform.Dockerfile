@@ -59,12 +59,21 @@ RUN uv sync --frozen \
 
 EXPOSE 3001
 
-# Instalar cliente psql para rodar o script
-RUN apk add --no-cache postgresql-client
+# 1) Instalar o cliente psql para rodar o script de setup do DB
+RUN apt-get update && \
+    apt-get install -y postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copiar o script para dentro do container
+# 2) Copiar o script de criação do banco e schema
 COPY docker/scripts/db-setup/db_setup.sh /usr/local/bin/db_setup.sh
 RUN chmod +x /usr/local/bin/db_setup.sh
 
-# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD [".venv/bin/gunicorn", "--bind", "0.0.0.0:3001", "--timeout", "300", "unstract.platform_service.run:app"]
+# 3) Copiar o entrypoint que vai chamar o db_setup e depois iniciar o Gunicorn
+COPY docker/scripts/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# 4) Remover ou comentar a linha CMD abaixo e substituí-la por ENTRYPOINT
+# CMD [".venv/bin/gunicorn", "--bind", "0.0.0.0:3001", "--timeout", "300", "unstract.platform_service.run:app"]
+
+# Substituir por:
+ENTRYPOINT ["/entrypoint.sh"]
