@@ -24,6 +24,7 @@ ENV \
 # Install system dependencies and create user in one layer
 RUN apt-get update && \
     apt-get --no-install-recommends install -y build-essential libmagic-dev git && \
+    apt-get install -y postgresql-client \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* && \
     adduser -u 5678 --disabled-password --gecos "" ${APP_USER} && \
@@ -59,9 +60,7 @@ RUN uv sync --frozen \
 
 EXPOSE 3001
 
-# 1) Instalar o cliente psql para rodar o script de setup do DB
-RUN apt-get update && \
-    apt-get install -y postgresql-client
+# 1) Instalar o cliente psql para rodar o script de setup do DB Feito mais acima na outra RUN executado o install -y postgresql-client
 
 # 2) Copiar o script de criação do banco e schema
 COPY docker/scripts/db-setup/db_setup.sh /usr/local/bin/db_setup.sh
